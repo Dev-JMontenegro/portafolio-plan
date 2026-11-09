@@ -1,0 +1,151 @@
+PLAN DE ACCION - PORTAFOLIO GITHUB (FULL-STACK WEB)
+Fecha: 2026-11-08
+Objetivo: conseguir empleo como desarrollador full-stack web.
+Alcance: 3 proyectos solidos, cada uno con README, tests, CI y demo desplegada.
+Ubicacion: D:\proyectos\<nombre-del-proyecto> (un repositorio por proyecto).
+
+Nota: este plan parte del mix recomendado (TaskFlow, DataPulse, DocuChat).
+Los stacks son propuestas y se pueden ajustar antes de empezar a programar.
+
+======================================================================
+CRITERIOS COMUNES A LOS 3 PROYECTOS (definicion de "terminado")
+======================================================================
+[ ] README con: descripcion, captura/GIF, demo en vivo, stack, como correrlo
+    en local, decisiones tecnicas y limitaciones conocidas.
+[ ] Tests automatizados (unitarios + al menos algunos de integracion).
+[ ] CI con GitHub Actions (lint + tests en cada push).
+[ ] Docker / docker-compose para levantar todo con un comando.
+[ ] Variables de entorno en .env.example (nunca subir secretos).
+[ ] Despliegue publico con URL (Vercel, Render, Railway o Fly.io).
+[ ] Commits pequenos y con mensajes claros (Conventional Commits).
+[ ] Licencia (MIT) y .gitignore correcto.
+[ ] Repositorio anclado (pinned) en el perfil de GitHub.
+
+======================================================================
+PROYECTO 1: TASKFLOW - KANBAN COLABORATIVO EN TIEMPO REAL  (repo: taskflow-kanban)
+======================================================================
+Competencia que demuestra: producto SaaS completo, auth, tiempo real, BD relacional.
+
+Stack propuesto:
+- Frontend: Next.js + TypeScript + Tailwind, drag and drop (dnd-kit).
+- Backend: Node.js (NestJS o Express) + WebSockets (Socket.IO).
+- Base de datos: PostgreSQL + Prisma.
+- Auth: JWT con refresh o Auth.js.
+- Tests: Vitest/Jest + Playwright (flujo principal).
+
+Funcionalidades (MVP):
+- Registro / login / logout.
+- Crear tableros, columnas y tarjetas; mover tarjetas con drag and drop.
+- Invitar miembros a un tablero con roles (propietario, editor, lector).
+- Cambios visibles en tiempo real para todos los miembros.
+- Comentarios y fecha limite en tarjetas.
+Fuera del MVP (solo si sobra tiempo): notificaciones por email, adjuntos, modo oscuro.
+
+Fases:
+1. Diseno: modelo de datos (usuarios, tableros, miembros, columnas, tarjetas) y wireframes.
+2. Base: repo, Docker Compose (app + Postgres), CI, esquema Prisma.
+3. Backend: auth, CRUD de tableros/columnas/tarjetas, permisos por rol.
+4. Frontend: login, lista de tableros, vista de tablero con drag and drop.
+5. Tiempo real: eventos WebSocket (mover/crear/editar) y reconciliacion de estado.
+6. Calidad: tests de API, test E2E del flujo "crear tablero -> mover tarjeta".
+7. Despliegue + README + GIF de demo.
+
+Criterio de exito: dos navegadores abiertos ven los cambios del otro al instante.
+
+======================================================================
+PROYECTO 2: DATAPULSE - API PUBLICA + DASHBOARD DE DATOS  (repo: datapulse-api)
+======================================================================
+Competencia que demuestra: diseno de APIs, cache, rate limiting, visualizacion.
+
+Stack propuesto:
+- Backend: Python (FastAPI) o Node (Fastify) con documentacion OpenAPI/Swagger.
+- Cache: Redis.
+- Base de datos: PostgreSQL (historico de datos).
+- Frontend: React + TypeScript + libreria de graficos (Recharts o ECharts).
+- Tests: pytest o Vitest, mas pruebas de contrato de la API.
+
+Decision pendiente: elegir la fuente de datos externa (finanzas, clima,
+deportes, datos abiertos de tu pais). Criterio: API gratuita, estable y con
+datos que cambien con el tiempo.
+
+Funcionalidades (MVP):
+- Job programado que descarga datos de la API externa y los guarda en Postgres.
+- API propia con endpoints de consulta, filtros, paginacion y agregaciones.
+- Cache en Redis con expiracion y cabeceras de cache correctas.
+- Rate limiting por IP/API key y manejo de errores consistente.
+- Dashboard con al menos 3 graficos, filtros por fecha y estado de carga/error.
+Fuera del MVP: autenticacion con API keys por usuario, exportar CSV.
+
+Fases:
+1. Elegir fuente de datos y explorar su API (limites, formato, ejemplos).
+2. Modelo de datos y script de ingesta + job programado.
+3. API: endpoints, validacion, paginacion, OpenAPI.
+4. Cache y rate limiting; pruebas de carga basicas.
+5. Dashboard: graficos, filtros, estados vacios/error.
+6. Tests, CI, Docker Compose (api + redis + postgres + frontend).
+7. Despliegue + README con diagrama de arquitectura.
+
+Criterio de exito: /docs publico y navegable; el dashboard carga rapido
+gracias a la cache (mostrar la comparativa antes/despues en el README).
+
+======================================================================
+PROYECTO 3: DOCUCHAT - ASISTENTE DE IA SOBRE DOCUMENTOS (RAG)  (repo: docuchat-ai)
+======================================================================
+Competencia que demuestra: integracion de LLMs, embeddings, streaming, UX de chat.
+
+Stack propuesto:
+- Frontend: Next.js + TypeScript, chat con respuestas en streaming.
+- Backend: Python (FastAPI) o rutas de Next.js.
+- IA: API de Claude (Anthropic) para generacion; embeddings con proveedor
+  a elegir; base vectorial con pgvector (PostgreSQL) para no sumar servicios.
+- Tests: pytest/Vitest con el LLM simulado (mock) para tests deterministas.
+
+Funcionalidades (MVP):
+- Subir documentos (PDF/TXT/MD); extraer texto y dividirlo en fragmentos.
+- Generar embeddings y guardarlos en pgvector.
+- Chat que recupera los fragmentos relevantes y responde citando la fuente.
+- Respuesta en streaming y historial de conversacion.
+- Limites de uso y manejo de errores (cuotas, timeouts).
+Fuera del MVP: multiusuario con auth, evaluacion automatica de calidad.
+
+Fases:
+1. Definir caso de uso concreto y un conjunto de documentos de ejemplo.
+2. Pipeline de ingesta: extraccion, chunking, embeddings, almacenamiento.
+3. Recuperacion + prompt + respuesta con citas.
+4. Interfaz de chat con streaming.
+5. Evaluacion simple: lista de preguntas/respuestas esperadas para medir calidad.
+6. Tests (con mocks), CI, Docker Compose.
+7. Despliegue (la clave de API va en variables de entorno del servidor,
+   nunca en el repo ni en el cliente) + README con ejemplos y limitaciones.
+
+Criterio de exito: preguntas sobre los documentos subidos se responden
+correctamente y con la fuente citada.
+
+======================================================================
+ORDEN DE CONSTRUCCION Y CALENDARIO SUGERIDO
+======================================================================
+Orden recomendado: 1 (TaskFlow) -> 2 (DataPulse) -> 3 (DocuChat).
+Razon: el primero fija tus buenas practicas (CI, Docker, tests) y las
+reutilizas en los otros dos.
+
+Estimacion orientativa a ritmo parcial (10-15 h/semana):
+- Proyecto 1: 3-4 semanas
+- Proyecto 2: 2-3 semanas
+- Proyecto 3: 2-3 semanas
+- Pulido final del perfil de GitHub: 2-3 dias
+
+======================================================================
+PERFIL DE GITHUB (al terminar)
+======================================================================
+[ ] README del perfil (repo con tu nombre de usuario) con presentacion y
+    enlaces a los 3 proyectos y sus demos.
+[ ] Los 3 repos anclados, con descripcion y topics.
+[ ] Foto, bio y enlace a LinkedIn/CV.
+[ ] Revisar que no haya secretos en el historial de ningun repo.
+
+======================================================================
+PROXIMOS PASOS
+======================================================================
+1. Confirmar el mix de proyectos y el stack de cada uno.
+2. Elegir la fuente de datos del Proyecto 2 y el caso de uso del Proyecto 3.
+3. Diseno detallado y especificacion del Proyecto 1; luego crear su repo.
